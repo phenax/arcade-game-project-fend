@@ -29,8 +29,6 @@ var Engine = (function(global) {
 	canvas.height = canvasDimens.height;
 	doc.body.appendChild(canvas);
 
-	window.canvas= canvas;
-
 	/* This function serves as the kickoff point for the game loop itself
 	 * and handles properly calling the update and render methods.
 	 */
@@ -97,6 +95,8 @@ var Engine = (function(global) {
 			enemy.update(dt);
 		});
 		player.update();
+
+		myGame.calcLoop();
 	}
 
 	/* This function initially draws the "game level", it will then call
@@ -154,6 +154,8 @@ var Engine = (function(global) {
 		});
 
 		player.render();
+
+		myGame.renderLoop();
 	}
 
 	/* This function does nothing but it could have been a good place to
@@ -169,11 +171,12 @@ var Engine = (function(global) {
 	 * all of these images are properly loaded our game will start.
 	 */
 	Resources.load([
+		'images/Heart.png',
 		'images/stone-block.png',
 		'images/water-block.png',
 		'images/grass-block.png',
 		'images/enemy-bug.png',
-		'images/char-boy.png'
+		'images/char-boy.png',
 	]);
 	Resources.onReady(init);
 
