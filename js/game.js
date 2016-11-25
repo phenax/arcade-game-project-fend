@@ -5,33 +5,23 @@ var player;
 var allEnemies= [];
 var myGame;
 
-function HealthPowerUp() {
-
-	this.visible= false;
-
-	this.sprite = 'images/Heart.png';
-}
-
-HealthPowerUp.prototype.toggle= function() {
-	this.visible= !this.visible;
-};
-
-HealthPowerUp.prototype.activate= function() {
-	player.addHealth(1);
-};
-
 
 
 function GameRunner() {
 
-	this.difficulty= 1;
-
-	this.score= 0;
+	this.reset();
 
 	this.powerup= new HealthPowerUp();
 
 	this.powerupTimer();
 }
+
+GameRunner.prototype.reset= function(enemy) {
+
+	this.difficulty= 1;
+
+	this.score= 0;
+};
 
 GameRunner.prototype.powerupTimer= function() {
 
@@ -48,44 +38,82 @@ GameRunner.prototype.powerupTimer= function() {
 
 	}.bind(this), Math.floor(Math.random()*8000 + 4000));
 
-	setInterval(function() {
-
-		console.log(allEnemies);
-
-		this.score+= 1;
+	/*
+	
+	this.score+= 1;
 
 		this.difficulty= (this.score <= 50)? this.score%10: this.difficulty;
-
-	}.bind(this), 2000);
+	 */
 };
 
 
 GameRunner.prototype.drawHealthBar= function() {
 
 	for(var i= 0; i< player.health; i++) {
-		ctx.drawImage(Resources.get(this.powerup.sprite), canvasDimens.width - (i + 1)*40, 50, 30, 50);
+		ctx.drawImage(Resources.get('images/Heart.png'), canvasDimens.width - (i + 1)*30, 50, 25, 40);
 	}
+};
+
+GameRunner.prototype.drawScoreBoard= function() {
+
+	ctx.fillStyle='#fff';
+	ctx.font="bold 16px Arial";
+
+	ctx.drawImage(Resources.get('images/Star.png'), 20, 49, 25, 40);
+	ctx.fillText('x' + this.score, 45, 78);
 };
 
 GameRunner.prototype.renderLoop= function() {
 
+	if(this.powerup.visible) {
+		ctx.drawImage(Resources.get(this.powerup.sprite), this.powerup.pos.x, this.powerup.pos.y, 80, 120);
+	}
 
+	this.drawScoreBoard();
 
 	// Draw last because it needs to be on top
 	this.drawHealthBar();
+};
 
-	// if(this.powerup.visible) {
-	// 	ctx.drawImage(Resources.get(this.powerup.sprite), 100, 100);
-	// }
+GameRunner.prototype.isTooClose= function(enemy) {
 
+	var dist=
+		Math.sqrt(
+			Math.pow(player.pos.x - enemy.pos.x, 2) + 
+			Math.pow(player.pos.y - enemy.pos.y, 2)
+		);
+
+	return dist <= 50;
 };
 
 GameRunner.prototype.calcLoop= function() {
 
-	allEnemies= allEnemies.filter(function(enemy) {
-		return enemy.pos.x < canvasDimens.width;
-	});
-	
+	allEnemies
+		.forEach(function(enemy) {
+
+			// If an enemy is too close
+			if(this.isTooClose(enemy)) {
+
+				player.addHealth(-1);
+
+				player.resetPosition();
+			}
+		}.bind(this))
+
+	// Filter out all the enemies that have moved outside the viewport
+	allEnemies= 
+		allEnemies
+			.filter(function(enemy) {
+				return enemy.pos.x < canvasDimens.width;
+			});
+
+	if(player.health === 0) {
+
+		alert("You Loose");
+
+		this.reset();
+		player.reset();
+	}
 };
 
 

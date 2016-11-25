@@ -7,8 +7,6 @@ function Player() {
 
 	this.INCREMENT= 101;
 
-	this.health= 5;
-
 	this.LOWER_LIMIT= {
 		x: 0,
 		y: 0
@@ -18,16 +16,31 @@ function Player() {
 		y: window.canvasDimens.height - 2*this.INCREMENT
 	};
 
+	this.pos= {};
+	this.target= {};
 
-	this.pos= {
-		x: window.canvasDimens.width/2 - this.INCREMENT/2,
-		y: window.canvasDimens.height - 2*this.INCREMENT
-	};
-
-	this.target= { x: this.pos.x, y: this.pos.y };
+	this.reset();
 
 	this.sprite= 'images/char-boy.png';
 }
+
+Player.prototype.reset= function() {
+
+	this.health= 5;
+
+	this.attachedItem= 'images/Star.png';
+
+	this.resetPosition();
+};
+
+Player.prototype.resetPosition= function() {
+
+	this.pos.x= window.canvasDimens.width/2 - this.INCREMENT/2;
+	this.pos.y= window.canvasDimens.height - 2*this.INCREMENT;
+
+	this.target.x= this.pos.x;
+	this.target.y= this.pos.y;
+};
 
 Player.prototype.addHealth= function(increment) {
 
@@ -35,7 +48,7 @@ Player.prototype.addHealth= function(increment) {
 		return;
 
 	this.health+= increment;
-}
+};
 
 Player.prototype.update= function() {
 
@@ -48,11 +61,16 @@ Player.prototype.update= function() {
 
 Player.prototype.render= function() {
 
+	// If theres an attached item, render it too
+	if(this.attachedItem)
+		ctx.drawImage(Resources.get(this.attachedItem), this.pos.x + this.INCREMENT/2 - 40, this.pos.y - 10, 80, 130);
+
+	// Render the player
 	ctx.drawImage(Resources.get(this.sprite), this.pos.x, this.pos.y);
-}
+};
 
 Player.prototype.handleInput= function(keyPressed) {
-	
+
 	switch(keyPressed) {
 		case 'up': {
 
@@ -60,7 +78,7 @@ Player.prototype.handleInput= function(keyPressed) {
 				return;
 
 			// Move up
-			this.target.y -= this.INCREMENT;
+			this.target.y -= this.INCREMENT/2;
 			break;
 		}
 		case 'down': {
@@ -69,7 +87,7 @@ Player.prototype.handleInput= function(keyPressed) {
 				return;
 
 			// Move down
-			this.target.y += this.INCREMENT;
+			this.target.y += this.INCREMENT/2;
 			break;
 		}
 		case 'right': {
@@ -91,4 +109,4 @@ Player.prototype.handleInput= function(keyPressed) {
 			break;
 		}
 	}
-}
+};

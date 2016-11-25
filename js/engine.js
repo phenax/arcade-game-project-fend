@@ -172,6 +172,7 @@ var Engine = (function(global) {
 	 */
 	Resources.load([
 		'images/Heart.png',
+		'images/Star.png',
 		'images/stone-block.png',
 		'images/water-block.png',
 		'images/grass-block.png',
