@@ -13,12 +13,17 @@ function GameRunner() {
 
 	this.powerup= new HealthPowerUp();
 
+	this.star= {
+		sprite: 'images/Star.png',
+		visible: true,
+		pos: { x: 0, y: 0 },
+		size: { x: 80, y: 130 }
+	};
+
 	this.powerupTimer();
 }
 
 GameRunner.prototype.reset= function(enemy) {
-
-	this.difficulty= 1;
 
 	this.score= 0;
 };
@@ -38,12 +43,6 @@ GameRunner.prototype.powerupTimer= function() {
 
 	}.bind(this), Math.floor(Math.random()*8000 + 4000));
 
-	/*
-	
-	this.score+= 1;
-
-		this.difficulty= (this.score <= 50)? this.score%10: this.difficulty;
-	 */
 };
 
 
@@ -63,18 +62,6 @@ GameRunner.prototype.drawScoreBoard= function() {
 	ctx.fillText('x' + this.score, 45, 78);
 };
 
-GameRunner.prototype.renderLoop= function() {
-
-	if(this.powerup.visible) {
-		ctx.drawImage(Resources.get(this.powerup.sprite), this.powerup.pos.x, this.powerup.pos.y, 80, 120);
-	}
-
-	this.drawScoreBoard();
-
-	// Draw last because it needs to be on top
-	this.drawHealthBar();
-};
-
 GameRunner.prototype.isTooClose= function(enemy) {
 
 	var dist=
@@ -86,19 +73,22 @@ GameRunner.prototype.isTooClose= function(enemy) {
 	return dist <= 50;
 };
 
+
+GameRunner.prototype.renderLoop= function() {
+
+	if(this.powerup.visible) {
+		ctx.drawImage(Resources.get(this.powerup.sprite), this.powerup.pos.x, this.powerup.pos.y, 80, 120);
+	}
+
+	ctx.drawImage(Resources.get(this.star.sprite), this.star.pos.x, this.star.pos.y, this.star.size.x, this.star.size.y);
+
+	this.drawScoreBoard();
+
+	// Draw last because it needs to be on top
+	this.drawHealthBar();
+};
+
 GameRunner.prototype.calcLoop= function() {
-
-	allEnemies
-		.forEach(function(enemy) {
-
-			// If an enemy is too close
-			if(this.isTooClose(enemy)) {
-
-				player.addHealth(-1);
-
-				player.resetPosition();
-			}
-		}.bind(this))
 
 	// Filter out all the enemies that have moved outside the viewport
 	allEnemies= 
@@ -106,6 +96,38 @@ GameRunner.prototype.calcLoop= function() {
 			.filter(function(enemy) {
 				return enemy.pos.x < canvasDimens.width;
 			});
+
+
+	if(player.safeLand) {
+
+		if(player.attachedItem) {
+
+			player.attachedItem= null;
+
+			this.score+= 1;
+		}
+
+	} else {
+
+		allEnemies
+			.forEach(function(enemy) {
+
+				// If an enemy is too close
+				if(this.isTooClose(enemy)) {
+
+					player.addHealth(-1);
+
+					player.resetPosition();
+				}
+			}.bind(this))
+	}
+
+
+
+	if(this.isTooClose(this.star)) {
+		player.attachedItem= this.star.sprite;
+	}
+
 
 	if(player.health === 0) {
 

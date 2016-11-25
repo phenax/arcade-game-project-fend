@@ -28,12 +28,12 @@ Player.prototype.reset= function() {
 
 	this.health= 5;
 
-	this.attachedItem= 'images/Star.png';
-
 	this.resetPosition();
 };
 
 Player.prototype.resetPosition= function() {
+
+	this.attachedItem= null;
 
 	this.pos.x= window.canvasDimens.width/2 - this.INCREMENT/2;
 	this.pos.y= window.canvasDimens.height - 2*this.INCREMENT;
@@ -57,6 +57,12 @@ Player.prototype.update= function() {
 
 	if(Math.abs(this.target.y - this.pos.y) >= 0.001)
 		this.pos.y+= (this.target.y - this.pos.y)/4;
+
+	if(this.pos.y >= 300) {
+		this.safeLand= true;
+	} else {
+		this.safeLand= false;
+	}
 };
 
 Player.prototype.render= function() {
