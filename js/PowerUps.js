@@ -4,15 +4,21 @@
  */
 function PowerUp() {
 
-	this.visible= true;
+	Character.call(this);
 
-	this.pos= {};
+	this.visible= true;
 	this.randomization= {};
 	this.size= { x: 80, y: 130 };
 }
 
-PowerUp.prototype.setSprite= function(sprite) {
-	this.sprite= sprite;
+PowerUp.prototype= Object.create(Character.prototype);
+
+
+PowerUp.prototype.init= function() {
+
+	this.randomizePos(this.randomization);
+
+	this.toggle();
 };
 
 PowerUp.prototype.toggle= function() {
@@ -29,30 +35,24 @@ PowerUp.prototype.randomizePos = function(limits) {
 	this.pos.y= getRandomNum(limits.yMin, limits.yMax) + 20;
 };
 
-PowerUp.prototype.init= function() {
-
-	this.randomizePos(this.randomization);
-
-	this.toggle();
-};
-
-PowerUp.prototype.draw= function() {
-
-	ctx.drawImage(
-		Resources.get(this.sprite), 
-		this.pos.x, this.pos.y, 
-		this.size.x, this.size.y
-	);
-}
 
 
 
-
+/**
+ * Adds life to the player
+ */
 function HealthPowerUp() {
 
 	PowerUp.call(this, null);
 
 	this.setSprite('images/Heart.png');
+
+	this.randomization= {
+		xMin: 0,
+		xMax: 5,
+		yMin: 1,
+		yMax: 3
+	};
 }
 
 HealthPowerUp.prototype= Object.create(PowerUp.prototype);
@@ -64,10 +64,14 @@ HealthPowerUp.prototype.activate= function() {
 
 
 
-
+/**
+ * Increases the points
+ */
 function StarPowerUp() {
 
 	PowerUp.call(this, null);
+
+	this.setSprite('images/Star.png');
 
 	this.randomization= {
 		xMin: 0,
@@ -75,8 +79,6 @@ function StarPowerUp() {
 		yMin: 0,
 		yMax: 0
 	};
-
-	this.setSprite('images/Star.png');
 }
 
 StarPowerUp.prototype= Object.create(PowerUp.prototype);

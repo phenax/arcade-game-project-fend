@@ -12,7 +12,15 @@ Character.prototype.setSprite= function(sprite) {
 };
 
 Character.prototype.draw = function() {
-	ctx.drawImage(Resources.get(this.sprite), this.pos.x, this.pos.y);
+	if(!this.size) {
+		ctx.drawImage(Resources.get(this.sprite), this.pos.x, this.pos.y);
+	} else {
+		ctx.drawImage(
+			Resources.get(this.sprite), 
+			this.pos.x, this.pos.y, 
+			this.size.x, this.size.y
+		);
+	}
 };
 
 Character.prototype.render= function() {

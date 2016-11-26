@@ -11,7 +11,11 @@ window.canvasDimens= {
 	height: 606,
 };
 
-
+/**
+ * The enemy class (The bugs)
+ * 
+ * @param {Number} speed  The bugs movement speed
+ */
 function Enemy(speed) {
 
 	Character.call(this, {

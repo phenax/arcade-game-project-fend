@@ -11,12 +11,13 @@ function Player(speed) {
 	this.defaultPos.x= window.canvasDimens.width/2 - this.INCREMENT/2;
 	this.defaultPos.y= window.canvasDimens.height - 2*this.INCREMENT;
 
-	Character.call(this, Object.create(this.defaultPos), speed || 0.1);
+	Character.call(this, Object.create(this.defaultPos), speed || 10);
 
 	this.LOWER_LIMIT= {
 		x: 0,
 		y: 0
 	};
+
 	this.UPPER_LIMIT= {
 		x: window.canvasDimens.width - this.INCREMENT,
 		y: window.canvasDimens.height - 2*this.INCREMENT
@@ -61,10 +62,10 @@ Player.prototype.addHealth= function(increment) {
 Player.prototype.update= function(dt) {
 
 	if(Math.abs(this.target.x - this.pos.x) >= 0.001)
-		this.pos.x+= (this.target.x - this.pos.x) * dt / this.speed;
+		this.pos.x+= (this.target.x - this.pos.x) * dt * this.speed;
 
 	if(Math.abs(this.target.y - this.pos.y) >= 0.001)
-		this.pos.y+= (this.target.y - this.pos.y) * dt / this.speed;
+		this.pos.y+= (this.target.y - this.pos.y) * dt * this.speed;
 };
 
 Player.prototype.render= function() {

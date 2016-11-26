@@ -2,8 +2,8 @@
 
 function GameRunner() {
 
-	this.powerup= new HealthPowerUp();
-
+	this.healthUp= new HealthPowerUp();
+	this.healthUp.init();
 	this.star= new StarPowerUp();
 
 	this.reset();
@@ -34,7 +34,10 @@ GameRunner.prototype.powerupTimer= function() {
 
 	setInterval(function() {
 		
-		this.powerup.toggle();
+		if(!this.healthUp.visible)
+			this.healthUp.randomizePos(this.randomization);
+
+		this.healthUp.toggle();
 
 		timeout= Math.floor(Math.random()*8000 + 2000);
 
@@ -52,11 +55,22 @@ GameRunner.prototype.drawHealthBar= function() {
 
 GameRunner.prototype.drawScoreBoard= function() {
 
-	ctx.fillStyle='#fff';
-	ctx.font="bold 16px Arial";
+	ctx.fillStyle= '#fff';
+	ctx.font= 'bold 16px Arial';
 
 	ctx.drawImage(Resources.get('images/Star.png'), 20, 49, 25, 40);
 	ctx.fillText('x' + this.score, 45, 78);
+};
+
+GameRunner.prototype.drawTopbar= function() {
+
+	// ctx.fillStyle= 'rgba(0,0,0,.5)';
+	// ctx.fillRect(0, 50, canvasDimens.width, 40);
+
+	this.drawScoreBoard();
+
+	// Draw last because it needs to be on top
+	this.drawHealthBar();
 };
 
 GameRunner.prototype.isTooClose= function(blob) {
@@ -76,7 +90,7 @@ GameRunner.prototype.saveStar= function() {
 
 		player.attachedItem= null;
 
-		// Activate powerup
+		// Activate star i.e. incr points
 		this.star.activate();
 
 		this.star.init();
@@ -85,13 +99,11 @@ GameRunner.prototype.saveStar= function() {
 
 GameRunner.prototype.gameOver= function() {
 
-	alert("Game Over. You scored " + this.score + " points.");
+	alert('Game Over. You scored ' + this.score + ' points.');
 
 	this.reset();
 	player.reset();
 };
-
-
 
 
 GameRunner.prototype.attachStar= function() {
@@ -103,17 +115,14 @@ GameRunner.prototype.attachStar= function() {
 
 GameRunner.prototype.renderLoop= function() {
 
-	if(this.powerup.visible)
-		this.powerup.draw();
+	if(this.healthUp.visible)
+		this.healthUp.draw();
 
 	if(this.star.visible)
 		this.star.draw();
 
 
-	this.drawScoreBoard();
-
-	// Draw last because it needs to be on top
-	this.drawHealthBar();
+	this.drawTopbar();
 };
 
 GameRunner.prototype.calcLoop= function() {
@@ -149,6 +158,13 @@ GameRunner.prototype.calcLoop= function() {
 			}.bind(this))
 	}
 
+
+	if(this.healthUp.visible && this.isTooClose(this.healthUp)) {
+
+		this.healthUp.activate();
+
+		this.healthUp.visible= false;
+	}
 
 	// If the player is close enough to a visible star, attach it to the player
 	if(this.star.visible && this.isTooClose(this.star))
