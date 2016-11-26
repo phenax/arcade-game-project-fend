@@ -26,8 +26,6 @@ function Player(speed) {
 	this.target= {};
 
 	this.reset();
-
-	this.setSprite('images/char-boy.png');
 }
 
 Player.prototype= Object.create(Character.prototype);
@@ -91,7 +89,7 @@ Player.prototype.handleInput= function(keyPressed) {
 				return;
 
 			// Move up
-			this.target.y -= this.INCREMENT/2;
+			this.target.y -= this.INCREMENT;
 			break;
 		}
 		case 'down': {
@@ -100,7 +98,7 @@ Player.prototype.handleInput= function(keyPressed) {
 				return;
 
 			// Move down
-			this.target.y += this.INCREMENT/2;
+			this.target.y += this.INCREMENT;
 			break;
 		}
 		case 'right': {

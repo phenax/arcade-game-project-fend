@@ -65,7 +65,7 @@ HealthPowerUp.prototype.randomizePos= function(limits) {
 	// super call
 	PowerUp.prototype.randomizePos.call(this, limits, {
 		x: 17,
-		y: 80
+		y: 50
 	});
 };
 

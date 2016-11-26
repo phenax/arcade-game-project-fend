@@ -91,12 +91,9 @@ var Engine = (function(global) {
 	 * render methods.
 	 */
 	function updateEntities(dt) {
-		allEnemies.forEach(function(enemy) {
-			enemy.update(dt);
-		});
-		player.update(dt);
 
-		myGame.calcLoop();
+		if(myGame.renderGame)
+			myGame.calcLoop(dt);
 	}
 
 	/* This function initially draws the "game level", it will then call
@@ -146,14 +143,6 @@ var Engine = (function(global) {
 	 * on your enemy and player entities within app.js
 	 */
 	function renderEntities() {
-		/* Loop through all of the objects within the allEnemies array and call
-		 * the render function you have defined.
-		 */
-		allEnemies.forEach(function(enemy) {
-			enemy.render();
-		});
-
-		player.render();
 
 		myGame.renderLoop();
 	}
@@ -178,6 +167,10 @@ var Engine = (function(global) {
 		'images/grass-block.png',
 		'images/enemy-bug.png',
 		'images/char-boy.png',
+		'images/char-cat-girl.png',
+		'images/char-horn-girl.png',
+		'images/char-pink-girl.png',
+		'images/char-princess-girl.png',
 	]);
 	Resources.onReady(init);
 
@@ -186,4 +179,5 @@ var Engine = (function(global) {
 	 * from within their app.js files.
 	 */
 	global.ctx = ctx;
+
 })(this);

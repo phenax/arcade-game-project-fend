@@ -8,6 +8,7 @@ function Character(initialPosition, speed) {
 };
 
 Character.prototype.setSprite= function(sprite) {
+
 	this.sprite= sprite;
 };
 

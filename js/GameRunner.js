@@ -2,6 +2,39 @@
 
 function GameRunner() {
 
+	this.renderGame= false;
+
+	this.SPRITES= [
+		'images/char-boy.png',
+		'images/char-cat-girl.png',
+		'images/char-horn-girl.png',
+		'images/char-pink-girl.png',
+		'images/char-princess-girl.png',
+	];
+}
+
+GameRunner.prototype.handleInput= function(key) {
+
+	key-= 49;
+
+	if(!this.renderGame) {
+
+		var sprite= this.SPRITES[key];
+
+		if(sprite) {
+			player= new Player();
+			player.setSprite(sprite);
+		} else
+			return;
+
+		this.start();
+	}
+};
+
+GameRunner.prototype.start= function() {
+
+	this.renderGame= true;
+
 	this.healthUp= new HealthPowerUp();
 	this.healthUp.init();
 
@@ -10,7 +43,7 @@ function GameRunner() {
 	this.reset();
 
 	this.powerupTimer();
-}
+};
 
 GameRunner.prototype.reset= function(enemy) {
 
@@ -116,6 +149,50 @@ GameRunner.prototype.attachStar= function() {
 
 GameRunner.prototype.renderLoop= function() {
 
+	if(!this.renderGame) {
+
+		ctx.fillStyle= '#27ae60';
+
+		ctx.fillRect(0, 0, canvasDimens.width, canvasDimens.height);
+
+		ctx.fillStyle= '#fff';
+		ctx.font= 'bold 30px Arial';
+		ctx.fillText("EVIL BUGS", canvasDimens.width/2 - 90, 120);
+
+		ctx.save();
+
+		ctx.font= '16px Arial';
+		ctx.fillText('Enter a number to choose the character', 100, 220);
+
+		ctx.restore();
+
+		this.SPRITES.forEach(
+
+			function(sprite, i) {
+
+				ctx.fillText(i + 1, i*101 + 45, 280);
+
+				ctx.drawImage(
+					Resources.get(sprite),
+					i*100 + 5, 240,
+					100, 180
+				);
+			}
+		);
+
+		return;
+	}
+
+	/* Loop through all of the objects within the allEnemies array and call
+	 * the render function you have defined.
+	 */
+	allEnemies.forEach(function(enemy) {
+		enemy.render();
+	});
+
+	player.render();
+
+
 	if(this.healthUp.visible)
 		this.healthUp.draw();
 
@@ -126,58 +203,67 @@ GameRunner.prototype.renderLoop= function() {
 	this.drawTopbar();
 };
 
-GameRunner.prototype.calcLoop= function() {
+GameRunner.prototype.calcLoop= function(dt) {
 
-	// Filter out all the enemies that have moved outside the viewport
-	allEnemies= 
-		allEnemies
-			.filter(function(enemy) {
-				return enemy.pos.x < canvasDimens.width;
-			});
+	allEnemies.forEach(function(enemy) {
+		enemy.update(dt);
+	});
 
+	player.update(dt);
 
-	// If the player is on the safe land
-	if(player.safeLand) {
+	// Skip a frame before calculating the rest of the stuff asynchronously
+	requestAnimationFrame(function() {
 
-		// Save any attached star
-		this.saveStar();
-	} else {
-
-		// For each enemy,
-		allEnemies
-			.forEach(function(enemy) {
-
-				// If an enemy is too close
-				if(this.isTooClose(enemy)) {
-
-					player.addHealth(-1);
-
-					player.resetPosition();
-
-					this.star.init();
-				}
-			}.bind(this))
-	}
+		// Filter out all the enemies that have moved outside the viewport
+		allEnemies= 
+			allEnemies
+				.filter(function(enemy) {
+					return enemy.pos.x < canvasDimens.width;
+				});
 
 
-	if(this.healthUp.visible && this.isTooClose(this.healthUp)) {
+		// If the player is on the safe land
+		if(player.safeLand) {
 
-		this.healthUp.activate();
+			// Save any attached star
+			this.saveStar();
+		} else {
 
-		this.healthUp.visible= false;
-	}
+			// For each enemy,
+			allEnemies
+				.forEach(function(enemy) {
 
-	// If the player is close enough to a visible star, attach it to the player
-	if(this.star.visible && this.isTooClose(this.star))
-		this.attachStar();
+					// If an enemy is too close
+					if(this.isTooClose(enemy)) {
+
+						player.addHealth(-1);
+
+						player.resetPosition();
+
+						this.star.init();
+					}
+				}.bind(this))
+		}
 
 
-	// Game over if health becomes 0
-	if(player.health === 0)
-		this.gameOver();
+		if(this.healthUp.visible && this.isTooClose(this.healthUp)) {
+
+			this.healthUp.activate();
+
+			this.healthUp.visible= false;
+		}
+
+		// If the player is close enough to a visible star, attach it to the player
+		if(this.star.visible && this.isTooClose(this.star))
+			this.attachStar();
+
+
+		// Game over if health becomes 0
+		if(player.health === 0)
+			this.gameOver();
+	}.bind(this));
 };
 
 
 
-player= new Player();
 myGame= new GameRunner();
