@@ -1,10 +1,3 @@
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-var player;
-var allEnemies= [];
-var myGame;
-
 
 
 function GameRunner() {
@@ -13,12 +6,8 @@ function GameRunner() {
 
 	this.powerup= new HealthPowerUp();
 
-	this.star= {
-		sprite: 'images/Star.png',
-		visible: true,
-		pos: { x: 0, y: 0 },
-		size: { x: 80, y: 130 }
-	};
+	this.star= new StarPowerUp();
+	this.star.randomizePos(this.star.randomization);
 
 	this.powerupTimer();
 }
@@ -30,18 +19,24 @@ GameRunner.prototype.reset= function(enemy) {
 
 GameRunner.prototype.powerupTimer= function() {
 
+	// Create a new enemy every 1 second
 	setInterval(function() {
 
-		allEnemies.push(new Enemy());
+		var speed= Math.floor(Math.random()*300 + 200);
 
+		allEnemies.push(new Enemy(speed));
 	}.bind(this), 1000);
 
+
+	var timeout= 10000;
 
 	setInterval(function() {
 		
 		this.powerup.toggle();
 
-	}.bind(this), Math.floor(Math.random()*8000 + 4000));
+		timeout= Math.floor(Math.random()*8000 + 2000);
+
+	}.bind(this), timeout);
 
 };
 
@@ -73,14 +68,45 @@ GameRunner.prototype.isTooClose= function(enemy) {
 	return dist <= 50;
 };
 
+GameRunner.prototype.saveStar= function() {
+
+	if(player.attachedItem) {
+
+		player.attachedItem= null;
+
+		// Activate powerup
+		this.star.activate();
+
+		this.star.init();
+	}
+};
+
+GameRunner.prototype.gameOver= function() {
+
+	alert("Game Over");
+
+	this.reset();
+	player.reset();
+};
+
+
+
+
+GameRunner.prototype.attachStar= function() {
+
+	player.attachedItem= this.star.sprite;
+
+	this.star.visible= false;
+};
 
 GameRunner.prototype.renderLoop= function() {
 
-	if(this.powerup.visible) {
-		ctx.drawImage(Resources.get(this.powerup.sprite), this.powerup.pos.x, this.powerup.pos.y, 80, 120);
-	}
+	if(this.powerup.visible)
+		this.powerup.draw();
 
-	ctx.drawImage(Resources.get(this.star.sprite), this.star.pos.x, this.star.pos.y, this.star.size.x, this.star.size.y);
+	if(this.star.visible)
+		this.star.draw();
+
 
 	this.drawScoreBoard();
 
@@ -98,17 +124,14 @@ GameRunner.prototype.calcLoop= function() {
 			});
 
 
+	// If the player is on the safe land
 	if(player.safeLand) {
 
-		if(player.attachedItem) {
-
-			player.attachedItem= null;
-
-			this.score+= 1;
-		}
-
+		// Save any attached star
+		this.saveStar();
 	} else {
 
+		// For each enemy,
 		allEnemies
 			.forEach(function(enemy) {
 
@@ -118,24 +141,21 @@ GameRunner.prototype.calcLoop= function() {
 					player.addHealth(-1);
 
 					player.resetPosition();
+
+					this.star.init();
 				}
 			}.bind(this))
 	}
 
 
+	// If the player is close enough to a visible star, attach it to the player
+	if(this.star.visible && this.isTooClose(this.star))
+		this.attachStar();
 
-	if(this.isTooClose(this.star)) {
-		player.attachedItem= this.star.sprite;
-	}
 
-
-	if(player.health === 0) {
-
-		alert("You Loose");
-
-		this.reset();
-		player.reset();
-	}
+	// Game over if health becomes 0
+	if(player.health === 0)
+		this.gameOver();
 };
 
 

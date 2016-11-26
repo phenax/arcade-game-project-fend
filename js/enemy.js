@@ -1,4 +1,12 @@
 
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+var player;
+var allEnemies= [];
+var myGame;
+
+
 window.canvasDimens= {
 	width: 505,
 	height: 606,
@@ -6,13 +14,13 @@ window.canvasDimens= {
 
 
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(speed) {
 	// Variables applied to each of our instances go here,
 	// we've provided one for you to get started
 
 	this.BLOCKSIZE= 80;
 
-	this.speed= 200;
+	this.speed= speed || 200;
 
 	this.pos= {
 		x: -100,

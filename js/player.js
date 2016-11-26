@@ -40,6 +40,8 @@ Player.prototype.resetPosition= function() {
 
 	this.target.x= this.pos.x;
 	this.target.y= this.pos.y;
+
+	this.attachedTarget= null;
 };
 
 Player.prototype.addHealth= function(increment) {
@@ -67,12 +69,12 @@ Player.prototype.update= function() {
 
 Player.prototype.render= function() {
 
-	// If theres an attached item, render it too
-	if(this.attachedItem)
-		ctx.drawImage(Resources.get(this.attachedItem), this.pos.x + this.INCREMENT/2 - 40, this.pos.y - 10, 80, 130);
-
 	// Render the player
 	ctx.drawImage(Resources.get(this.sprite), this.pos.x, this.pos.y);
+
+	// If theres an attached item, render it too
+	if(this.attachedItem)
+		ctx.drawImage(Resources.get(this.attachedItem), this.pos.x + this.INCREMENT/2 - 25, this.pos.y + 30, 50, 80);
 };
 
 Player.prototype.handleInput= function(keyPressed) {
