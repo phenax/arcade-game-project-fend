@@ -1,34 +1,36 @@
 /**
  * Player class
+ *
+ * @constructor
  */
 function Player(speed) {
 
-    // Increment i.e. block size
-    this.INCREMENT = canvasDimens.width / 5;
+	// Increment i.e. block size
+	this.INCREMENT = canvasDimens.width / 5;
 
-    // The default position for the player to reset to
-    this.defaultPos = {};
-    this.defaultPos.x = window.canvasDimens.width / 2 - this.INCREMENT / 2;
-    this.defaultPos.y = window.canvasDimens.height - 2 * this.INCREMENT;
+	// The default position for the player to reset to
+	this.defaultPos = {};
+	this.defaultPos.x = window.canvasDimens.width / 2 - this.INCREMENT / 2;
+	this.defaultPos.y = window.canvasDimens.height - 2 * this.INCREMENT;
 
-    Character.call(this, Object.create(this.defaultPos), speed || 10);
+	Character.call(this, Object.create(this.defaultPos), speed || 10);
 
 
-    // Lower and Upper limit for movement
-    this.LOWER_LIMIT = {
-        x: 0,
-        y: 0
-    };
+	// Lower and Upper limit for movement
+	this.LOWER_LIMIT = {
+		x: 0,
+		y: 0
+	};
 
-    this.UPPER_LIMIT = {
-        x: window.canvasDimens.width - this.INCREMENT,
-        y: window.canvasDimens.height - 2 * this.INCREMENT
-    };
+	this.UPPER_LIMIT = {
+		x: window.canvasDimens.width - this.INCREMENT,
+		y: window.canvasDimens.height - 2 * this.INCREMENT
+	};
 
-    // Target position to animate to
-    this.target = {};
+	// Target position to animate to
+	this.target = {};
 
-    this.reset();
+	this.reset();
 }
 
 Player.prototype = Object.create(Character.prototype);
@@ -39,9 +41,9 @@ Player.prototype = Object.create(Character.prototype);
  */
 Player.prototype.reset = function() {
 
-    this.health = 5;
+	this.health = 5;
 
-    this.resetPosition();
+	this.resetPosition();
 };
 
 
@@ -50,13 +52,13 @@ Player.prototype.reset = function() {
  */
 Player.prototype.resetPosition = function() {
 
-    this.attachedItem = null;
+	this.attachedItem = null;
 
-    this.pos.x = this.defaultPos.x;
-    this.pos.y = this.defaultPos.y;
+	this.pos.x = this.defaultPos.x;
+	this.pos.y = this.defaultPos.y;
 
-    this.target.x = this.pos.x;
-    this.target.y = this.pos.y;
+	this.target.x = this.pos.x;
+	this.target.y = this.pos.y;
 };
 
 
@@ -67,10 +69,10 @@ Player.prototype.resetPosition = function() {
  */
 Player.prototype.addHealth = function(increment) {
 
-    if (this.health + increment > 5 || this.health + increment < 0)
-        return;
+	if (this.health + increment > 5 || this.health + increment < 0)
+		return;
 
-    this.health += increment;
+	this.health += increment;
 };
 
 
@@ -79,12 +81,12 @@ Player.prototype.addHealth = function(increment) {
  */
 Player.prototype.update = function(dt) {
 
-    // 'Ease out' to the target position
-    if (Math.abs(this.target.x - this.pos.x) >= 0.001)
-        this.pos.x += (this.target.x - this.pos.x) * dt * this.speed;
+	// 'Ease out' to the target position
+	if (Math.abs(this.target.x - this.pos.x) >= 0.001)
+		this.pos.x += (this.target.x - this.pos.x) * dt * this.speed;
 
-    if (Math.abs(this.target.y - this.pos.y) >= 0.001)
-        this.pos.y += (this.target.y - this.pos.y) * dt * this.speed;
+	if (Math.abs(this.target.y - this.pos.y) >= 0.001)
+		this.pos.y += (this.target.y - this.pos.y) * dt * this.speed;
 };
 
 
@@ -93,16 +95,16 @@ Player.prototype.update = function(dt) {
  */
 Player.prototype.render = function() {
 
-    // Render the player
-    this.draw();
+	// Render the player
+	this.draw();
 
-    // If theres an attached item, render it too
-    if (this.attachedItem)
-        ctx.drawImage(
-            Resources.get(this.attachedItem.sprite),
-            this.pos.x + this.INCREMENT / 2 - this.attachedItem.size.x / 4, this.pos.y + 30,
-            this.attachedItem.size.x / 2, this.attachedItem.size.y / 2
-        );
+	// If theres an attached item, render it too
+	if (this.attachedItem)
+		ctx.drawImage(
+			Resources.get(this.attachedItem.sprite),
+			this.pos.x + this.INCREMENT / 2 - this.attachedItem.size.x / 4, this.pos.y + 30,
+			this.attachedItem.size.x / 2, this.attachedItem.size.y / 2
+		);
 };
 
 
@@ -113,49 +115,49 @@ Player.prototype.render = function() {
  */
 Player.prototype.handleInput = function(keyPressed) {
 
-    switch (keyPressed) {
-        case 'up':
-            {
+	switch (keyPressed) {
+		case 'up':
+			{
 
-                if (this.target.y <= this.LOWER_LIMIT.y)
-                    return;
+				if (this.target.y <= this.LOWER_LIMIT.y)
+					return;
 
-                // Move up
-                this.target.y -= this.INCREMENT;
-                break;
-            }
-        case 'down':
-            {
+				// Move up
+				this.target.y -= this.INCREMENT;
+				break;
+			}
+		case 'down':
+			{
 
-                if (this.target.y >= this.UPPER_LIMIT.y)
-                    return;
+				if (this.target.y >= this.UPPER_LIMIT.y)
+					return;
 
-                // Move down
-                this.target.y += this.INCREMENT;
-                break;
-            }
-        case 'right':
-            {
+				// Move down
+				this.target.y += this.INCREMENT;
+				break;
+			}
+		case 'right':
+			{
 
-                if (this.target.x >= this.UPPER_LIMIT.x)
-                    return;
+				if (this.target.x >= this.UPPER_LIMIT.x)
+					return;
 
-                // Move right
-                this.target.x += this.INCREMENT;
-                break;
-            }
-        case 'left':
-            {
+				// Move right
+				this.target.x += this.INCREMENT;
+				break;
+			}
+		case 'left':
+			{
 
-                if (this.target.x <= this.LOWER_LIMIT.x)
-                    return;
+				if (this.target.x <= this.LOWER_LIMIT.x)
+					return;
 
-                // Move left
-                this.target.x -= this.INCREMENT;
-                break;
-            }
-    }
+				// Move left
+				this.target.x -= this.INCREMENT;
+				break;
+			}
+	}
 
-    // IF the player is aiming for the safe spot(grass zone)
-    this.safeLand = this.target.y >= 303;
+	// IF the player is aiming for the safe spot(grass zone)
+	this.safeLand = this.target.y >= 303;
 };

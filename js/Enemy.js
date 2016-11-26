@@ -7,23 +7,25 @@ var myGame;
 
 // The dimensions
 window.canvasDimens = {
-    width: 505,
-    height: 606,
+	width: 505,
+	height: 606,
 };
 
 /**
  * The enemy class (The bugs)
+ *
+ * @constructor
  * 
  * @param {Number} speed  The bugs movement speed
  */
 function Enemy(speed) {
 
-    Character.call(this, {
-        x: -100,
-        y: Math.floor(Math.random() * 3 + 1) * 83 - 30
-    }, speed || 200);
+	Character.call(this, {
+		x: -100,
+		y: Math.floor(Math.random() * 3 + 1) * 83 - 30
+	}, speed || 200);
 
-    this.setSprite('images/enemy-bug.png');
+	this.setSprite('images/enemy-bug.png');
 };
 
 Enemy.prototype = Object.create(Character.prototype);
@@ -31,5 +33,5 @@ Enemy.prototype = Object.create(Character.prototype);
 // Calculation loop
 Enemy.prototype.update = function(dt) {
 
-    this.pos.x += dt * this.speed;
+	this.pos.x += dt * this.speed;
 };
