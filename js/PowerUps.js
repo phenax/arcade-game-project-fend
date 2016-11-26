@@ -13,7 +13,9 @@ function PowerUp() {
 
 PowerUp.prototype= Object.create(Character.prototype);
 
-
+/**
+ * Randomize position and make the powerup visible
+ */
 PowerUp.prototype.init= function() {
 
 	this.randomizePos(this.randomization);
@@ -21,10 +23,19 @@ PowerUp.prototype.init= function() {
 	this.visible= true;
 };
 
+/**
+ * Toggle powerup visibility
+ */
 PowerUp.prototype.toggle= function() {
 	this.visible= !this.visible;
 };
 
+/**
+ * Randomizes power up position
+ * 
+ * @param  {Object} limits  The limits for randomization
+ * @param  {Object} offset  Offset that random value
+ */
 PowerUp.prototype.randomizePos = function(limits, offset) {
 
 	this.pos.x= this.getRandomNum(limits.xMin || 0, limits.xMax || 0) + ( (offset)? offset.x: 0 );
@@ -43,6 +54,7 @@ function HealthPowerUp() {
 
 	this.setSprite('images/Heart.png');
 
+	// Randomization limits
 	this.randomization= {
 		xMin: 0,
 		xMax: 5,
@@ -50,15 +62,20 @@ function HealthPowerUp() {
 		yMax: 3
 	};
 
+	// Scale it down to half the size
 	this.size.x= this.size.x/1.2;
 	this.size.y= this.size.y/1.2;
 }
 
 HealthPowerUp.prototype= Object.create(PowerUp.prototype);
 
+/**
+ * Activation action - Increase health by 1
+ */
 HealthPowerUp.prototype.activate= function() {
 	player.addHealth(1);
 };
+
 
 HealthPowerUp.prototype.randomizePos= function(limits) {
 
@@ -82,6 +99,7 @@ function StarPowerUp() {
 
 	this.setSprite('images/Star.png');
 
+	// Randomization limits
 	this.randomization= {
 		xMin: 0,
 		xMax: 5,
@@ -92,9 +110,13 @@ function StarPowerUp() {
 
 StarPowerUp.prototype= Object.create(PowerUp.prototype);
 
+/**
+ * Activation action - Increase the score of the player by 1
+ */
 StarPowerUp.prototype.activate= function() {
 	myGame.score+= 1;
 };
+
 
 StarPowerUp.prototype.randomizePos= function(limits) {
 

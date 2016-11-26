@@ -6,6 +6,7 @@ var player;
 var allEnemies= [];
 var myGame;
 
+// The dimensions
 window.canvasDimens= {
 	width: 505,
 	height: 606,
@@ -28,6 +29,7 @@ function Enemy(speed) {
 
 Enemy.prototype= Object.create(Character.prototype);
 
+// Calculation loop
 Enemy.prototype.update = function(dt) {
 
 	this.pos.x+= dt*this.speed;

@@ -1,18 +1,21 @@
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
+/**
+ * Player class
+ */
 function Player(speed) {
 
-	this.INCREMENT= 101;
+	// Increment i.e. block size
+	this.INCREMENT= canvasDimens.width/5;
 
+	// The default position for the player to reset to
 	this.defaultPos= {};
 	this.defaultPos.x= window.canvasDimens.width/2 - this.INCREMENT/2;
 	this.defaultPos.y= window.canvasDimens.height - 2*this.INCREMENT;
 
 	Character.call(this, Object.create(this.defaultPos), speed || 10);
 
+
+	// Lower and Upper limit for movement
 	this.LOWER_LIMIT= {
 		x: 0,
 		y: 0
@@ -23,6 +26,7 @@ function Player(speed) {
 		y: window.canvasDimens.height - 2*this.INCREMENT
 	};
 
+	// Target position to animate to
 	this.target= {};
 
 	this.reset();
@@ -31,6 +35,9 @@ function Player(speed) {
 Player.prototype= Object.create(Character.prototype);
 
 
+/**
+ * Reset the player's properties(instead of creating a new instance)
+ */
 Player.prototype.reset= function() {
 
 	this.health= 5;
@@ -38,6 +45,10 @@ Player.prototype.reset= function() {
 	this.resetPosition();
 };
 
+
+/**
+ * Reset the position of the player back to the safe spot
+ */
 Player.prototype.resetPosition= function() {
 
 	this.attachedItem= null;
@@ -49,6 +60,12 @@ Player.prototype.resetPosition= function() {
 	this.target.y= this.pos.y;
 };
 
+
+/**
+ * Add some health to the player's health(increment/decrement)
+ * 
+ * @param {Number} increment  Value to add to the health
+ */
 Player.prototype.addHealth= function(increment) {
 
 	if(this.health + increment > 5 || this.health + increment < 0)
@@ -57,8 +74,13 @@ Player.prototype.addHealth= function(increment) {
 	this.health+= increment;
 };
 
+
+/**
+ * Calculation loop
+ */
 Player.prototype.update= function(dt) {
 
+	// 'Ease out' to the target position
 	if(Math.abs(this.target.x - this.pos.x) >= 0.001)
 		this.pos.x+= (this.target.x - this.pos.x) * dt * this.speed;
 
@@ -66,6 +88,10 @@ Player.prototype.update= function(dt) {
 		this.pos.y+= (this.target.y - this.pos.y) * dt * this.speed;
 };
 
+
+/**
+ * Render loop
+ */
 Player.prototype.render= function() {
 
 	// Render the player
@@ -80,6 +106,12 @@ Player.prototype.render= function() {
 		);
 };
 
+
+/**
+ * Key event handler
+ * 
+ * @param  {String} keyPressed  The name of the key pressed
+ */
 Player.prototype.handleInput= function(keyPressed) {
 
 	switch(keyPressed) {
@@ -121,9 +153,6 @@ Player.prototype.handleInput= function(keyPressed) {
 		}
 	}
 
-	if(this.target.y >= 303) {
-		this.safeLand= true;
-	} else {
-		this.safeLand= false;
-	}
+	// IF the player is aiming for the safe spot(grass zone)
+	this.safeLand= this.target.y >= 303;
 };

@@ -92,6 +92,7 @@ var Engine = (function(global) {
 	 */
 	function updateEntities(dt) {
 
+		// Replaced individual update loops to one
 		if(myGame.renderGame)
 			myGame.calcLoop(dt);
 	}
@@ -144,6 +145,7 @@ var Engine = (function(global) {
 	 */
 	function renderEntities() {
 
+		// Render game
 		myGame.renderLoop();
 	}
 

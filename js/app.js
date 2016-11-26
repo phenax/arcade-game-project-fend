@@ -11,10 +11,11 @@ document.addEventListener('keyup', function(e) {
 		40: 'down'
 	};
 
+	// Save unnecessary calls to handleInput
 	if(allowedKeys[e.keyCode])
 		player.handleInput(allowedKeys[e.keyCode]);
 
 	// Numbers 1 to 5 are allowed
-	if((e.keyCode >= 49 && e.keyCode < 54))
+	if((e.keyCode >= 49 && e.keyCode < 54) || e.keyCode === 27)
 		myGame.handleInput(e.keyCode);
 });
