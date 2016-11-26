@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Player class
  *
@@ -34,6 +36,7 @@ function Player(speed) {
 }
 
 Player.prototype = Object.create(Character.prototype);
+Player.prototype.constructor= Player;
 
 
 /**

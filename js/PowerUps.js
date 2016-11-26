@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Powerup super class
  *
@@ -16,6 +18,7 @@ function PowerUp() {
 }
 
 PowerUp.prototype = Object.create(Character.prototype);
+PowerUp.prototype.constructor= PowerUp;
 
 /**
  * Randomize position and make the powerup visible
@@ -74,6 +77,7 @@ function HealthPowerUp() {
 }
 
 HealthPowerUp.prototype = Object.create(PowerUp.prototype);
+HealthPowerUp.prototype.constructor= HealthPowerUp;
 
 /**
  * Activation action - Increase health by 1
@@ -116,6 +120,7 @@ function StarPowerUp() {
 }
 
 StarPowerUp.prototype = Object.create(PowerUp.prototype);
+StarPowerUp.prototype.constructor= StarPowerUp;
 
 /**
  * Activation action - Increase the score of the player by 1

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Character super class
  *

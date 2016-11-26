@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * All game related functionality wrapper class
  *
