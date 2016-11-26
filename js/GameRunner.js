@@ -2,12 +2,11 @@
 
 function GameRunner() {
 
-	this.reset();
-
 	this.powerup= new HealthPowerUp();
 
 	this.star= new StarPowerUp();
-	this.star.randomizePos(this.star.randomization);
+
+	this.reset();
 
 	this.powerupTimer();
 }
@@ -15,6 +14,8 @@ function GameRunner() {
 GameRunner.prototype.reset= function(enemy) {
 
 	this.score= 0;
+
+	this.star.randomizePos(this.star.randomization);
 };
 
 GameRunner.prototype.powerupTimer= function() {
@@ -25,6 +26,7 @@ GameRunner.prototype.powerupTimer= function() {
 		var speed= Math.floor(Math.random()*300 + 200);
 
 		allEnemies.push(new Enemy(speed));
+
 	}.bind(this), 1000);
 
 
@@ -57,12 +59,12 @@ GameRunner.prototype.drawScoreBoard= function() {
 	ctx.fillText('x' + this.score, 45, 78);
 };
 
-GameRunner.prototype.isTooClose= function(enemy) {
+GameRunner.prototype.isTooClose= function(blob) {
 
 	var dist=
 		Math.sqrt(
-			Math.pow(player.pos.x - enemy.pos.x, 2) + 
-			Math.pow(player.pos.y - enemy.pos.y, 2)
+			Math.pow(player.pos.x - blob.pos.x, 2) + 
+			Math.pow(player.pos.y - blob.pos.y, 2)
 		);
 
 	return dist <= 50;
@@ -83,7 +85,7 @@ GameRunner.prototype.saveStar= function() {
 
 GameRunner.prototype.gameOver= function() {
 
-	alert("Game Over");
+	alert("Game Over. You scored " + this.score + " points.");
 
 	this.reset();
 	player.reset();
@@ -94,7 +96,7 @@ GameRunner.prototype.gameOver= function() {
 
 GameRunner.prototype.attachStar= function() {
 
-	player.attachedItem= this.star.sprite;
+	player.attachedItem= this.star;
 
 	this.star.visible= false;
 };
