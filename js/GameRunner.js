@@ -151,9 +151,9 @@ GameRunner.prototype.renderLoop= function() {
 
 	if(!this.renderGame) {
 
-		ctx.fillStyle= '#27ae60';
+		ctx.fillStyle= 'rgba(0,0,0,.8)';
 
-		ctx.fillRect(0, 0, canvasDimens.width, canvasDimens.height);
+		ctx.fillRect(0, 50, canvasDimens.width, canvasDimens.height - 70);
 
 		ctx.fillStyle= '#fff';
 		ctx.font= 'bold 30px Arial';
@@ -162,7 +162,7 @@ GameRunner.prototype.renderLoop= function() {
 		ctx.save();
 
 		ctx.font= '16px Arial';
-		ctx.fillText('Enter a number to choose the character', 100, 220);
+		ctx.fillText('Pick a character for this adventure', 115, 210);
 
 		ctx.restore();
 
