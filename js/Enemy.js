@@ -20,7 +20,7 @@ function Enemy(speed) {
 
 	Character.call(this, {
 		x: -100,
-		y: Math.floor(Math.random()*3 + 1)*80 - 33
+		y: Math.floor(Math.random()*3 + 1)*83 - 30
 	}, speed || 200);
 
 	this.setSprite('images/enemy-bug.png');

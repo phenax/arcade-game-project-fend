@@ -18,21 +18,17 @@ PowerUp.prototype.init= function() {
 
 	this.randomizePos(this.randomization);
 
-	this.toggle();
+	this.visible= true;
 };
 
 PowerUp.prototype.toggle= function() {
 	this.visible= !this.visible;
 };
 
-PowerUp.prototype.randomizePos = function(limits) {
+PowerUp.prototype.randomizePos = function(limits, offset) {
 
-	var getRandomNum= function(max, min) {
-		return Math.floor(Math.random()*(max - min + 1) + min)*101;
-	}
-
-	this.pos.x= getRandomNum(limits.xMin, limits.xMax);
-	this.pos.y= getRandomNum(limits.yMin, limits.yMax) + 20;
+	this.pos.x= this.getRandomNum(limits.xMin || 0, limits.xMax || 0) + ( (offset)? offset.x: 0 );
+	this.pos.y= this.getRandomNum(limits.yMin || 0, limits.yMax || 0) + ( (offset)? offset.y: 0 );
 };
 
 
@@ -50,9 +46,12 @@ function HealthPowerUp() {
 	this.randomization= {
 		xMin: 0,
 		xMax: 5,
-		yMin: 1,
+		yMin: 0,
 		yMax: 3
 	};
+
+	this.size.x= this.size.x/1.2;
+	this.size.y= this.size.y/1.2;
 }
 
 HealthPowerUp.prototype= Object.create(PowerUp.prototype);
@@ -61,11 +60,21 @@ HealthPowerUp.prototype.activate= function() {
 	player.addHealth(1);
 };
 
+HealthPowerUp.prototype.randomizePos= function(limits) {
+
+	// super call
+	PowerUp.prototype.randomizePos.call(this, limits, {
+		x: 17,
+		y: 80
+	});
+};
+
+
 
 
 
 /**
- * Increases the points
+ * Increases the points scored
  */
 function StarPowerUp() {
 
@@ -85,4 +94,13 @@ StarPowerUp.prototype= Object.create(PowerUp.prototype);
 
 StarPowerUp.prototype.activate= function() {
 	myGame.score+= 1;
+};
+
+StarPowerUp.prototype.randomizePos= function(limits) {
+
+	// super call
+	PowerUp.prototype.randomizePos.call(this, limits, {
+		x: 10,
+		y: 20
+	});
 };

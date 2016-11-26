@@ -26,3 +26,9 @@ Character.prototype.draw = function() {
 Character.prototype.render= function() {
 	this.draw();
 };
+
+Character.prototype.getRandomNum= function(max, min) {
+	return Math.floor(
+		Math.random()*(max - min + 1) + min
+	) * 101;
+};

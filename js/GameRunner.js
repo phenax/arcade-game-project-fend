@@ -4,6 +4,7 @@ function GameRunner() {
 
 	this.healthUp= new HealthPowerUp();
 	this.healthUp.init();
+
 	this.star= new StarPowerUp();
 
 	this.reset();
@@ -15,7 +16,7 @@ GameRunner.prototype.reset= function(enemy) {
 
 	this.score= 0;
 
-	this.star.randomizePos(this.star.randomization);
+	this.star.init();
 };
 
 GameRunner.prototype.powerupTimer= function() {
@@ -35,7 +36,7 @@ GameRunner.prototype.powerupTimer= function() {
 	setInterval(function() {
 		
 		if(!this.healthUp.visible)
-			this.healthUp.randomizePos(this.randomization);
+			this.healthUp.randomizePos(this.healthUp.randomization);
 
 		this.healthUp.toggle();
 
